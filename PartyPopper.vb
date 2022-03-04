@@ -1,29 +1,40 @@
 ﻿Public Class PartyPopper
 
+    Public Base As New PopperFundamentals
+
     Public WithEvents T As New Timer
 
-    Dim BallList As New List(Of Ball)
-
-    Public Popper As PictureBox
-
     Public Sub New(ClickPos As Point)
-        Popper = GetPopper(ClickPos)
-        Form1.Controls.Add(Popper)
-        Popper.BringToFront()
+        'have warning if we know its possible to offscreen particles  ?
+        Base.Popper = GetPopper(ClickPos)
+        Form1.Controls.Add(Base.Popper)
+        Base.Popper.BringToFront()
         T.Interval = 60
         T.Start()
-        BallList.Add(New Ball(Popper))
+        Base.CoreMoveObjList.Add(New GravObj(Base.Popper, AssignParticleSpeedX, AssignParticleSpeedY))
     End Sub
 
+    Private Function AssignParticleSpeedX()
+        Randomize()
+        Return (Int(Rnd() * 30)) - 15
+    End Function
+
+    Private Function AssignParticleSpeedY()
+        Randomize()
+        Return -40 + (Int(Rnd() * 10) + 1)
+    End Function
+
     Private Sub T_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles T.Tick
-        BallList.Add(New Ball(Popper))
-        For i = BallList.Count - 1 To 0 Step -1
-            BallList(i).UpdatePos()
-            If BallList(i).Top > Form1.Height Then
-                Form1.Controls.Remove(BallList(i))
-                BallList.Remove(BallList(i))
+        '-----BASIC LOOP UNIVERSAL--------|
+        Base.CoreMoveObjList.Add(New GravObj(Base.Popper, AssignParticleSpeedX, AssignParticleSpeedY))
+        For i = Base.CoreMoveObjList.Count - 1 To 0 Step -1
+            Base.CoreMoveObjList(i).UpdatePos()
+            If Base.CoreMoveObjList(i).Bounds.IntersectsWith(Form1.Bounds) = False Then
+                Form1.Controls.Remove(Base.CoreMoveObjList(i))
+                Base.CoreMoveObjList.Remove(Base.CoreMoveObjList(i))
             End If
         Next
+        '---------------------------------|
     End Sub
     Private Function GetPopper(ClickPos As Point) As PictureBox
         Dim Pop As New PictureBox
@@ -32,29 +43,9 @@
         Pop.Location = New Point(ClickPos.X - 16, ClickPos.Y - 16)
         Return Pop
     End Function
-    Private Class Ball
-        Inherits PictureBox
-        Public Shared Dimension As Integer = 10
-        Public xs As Integer
-        Public ys As Integer
-        Sub New(PopperParent As PictureBox)
-            Form1.Controls.Add(Me)
-            Me.Size = New Size(Dimension, Dimension)
-            Me.Left = PopperParent.Left + Dimension / 2
-            Me.Top = PopperParent.Top + Dimension / 2
-            Assign()
-        End Sub
-        Sub UpdatePos()
-            ys += 3
-            Me.Left += xs
-            Me.Top += ys
-        End Sub
-        Private Sub Assign()
-            Dim PartyCols() As Color = {Color.Red, Color.Yellow, Color.Green, Color.Pink, Color.LightBlue}
-            Randomize()
-            ys = -40 + (Int(Rnd() * 10) + 1)
-            xs = (Int(Rnd() * 30)) - 15
-            Me.BackColor = PartyCols(Int(Rnd() * (PartyCols.Length)))
-        End Sub
-    End Class
+
+    Public Sub DisposeObj()
+        T.Stop()
+        Base.CoreMoveObjList.Clear()
+    End Sub
 End Class
