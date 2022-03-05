@@ -1,22 +1,20 @@
 ﻿Public Class FireworkPopper
 
-    Public Base As New PopperFundamentals
-
-    Public WithEvents T As New Timer
+    Inherits PopperFundamentals
 
     Dim CentralParticle As Particle
 
     Dim HasBurstOccured As Boolean
 
     Public Sub New(ClickPos As Point)
-        Base.ObeysGravity = True
+        ObeysGravity = True
 
-        Base.Popper = GetPopper(ClickPos)
-        Form1.Controls.Add(Base.Popper)
-        Base.Popper.BringToFront()
+        Popper = GetPopper(ClickPos)
+        Form1.Controls.Add(Popper)
+        Popper.BringToFront()
         T.Interval = 60
         T.Start()
-        CentralParticle = New Particle(Base.Popper, AssignParticleSpeedX, AssignParticleSpeedY)
+        CentralParticle = New Particle(Popper, AssignParticleSpeedX, AssignParticleSpeedY)
     End Sub
     Private Sub T_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles T.Tick
         '-----BASIC LOOP UNIVERSAL---------
@@ -26,21 +24,21 @@
             'asCentralPopped = True
             If HasBurstOccured = False Then
                 For i = 0 To 19
-                    Base.CoreMoveObjList.Add(New Particle(CentralParticle, AssignParticleSpeedX, AssignShowerSpeedY))
+                    CoreMoveObjList.Add(New Particle(CentralParticle, AssignParticleSpeedX, AssignShowerSpeedY))
                 Next
                 HasBurstOccured = True
             End If
         Else
-            CentralParticle.UpdatePos(Base.ObeysGravity)
+            CentralParticle.UpdatePos(ObeysGravity)
         End If
 
 
         If HasBurstOccured = True Then
-            For i = Base.CoreMoveObjList.Count - 1 To 0 Step -1
-                Base.CoreMoveObjList(i).UpdatePos(Base.ObeysGravity)
-                If Base.CoreMoveObjList(i).Bounds.IntersectsWith(Form1.Bounds) = False Then
-                    Form1.Controls.Remove(Base.CoreMoveObjList(i))
-                    Base.CoreMoveObjList.Remove(Base.CoreMoveObjList(i))
+            For i = CoreMoveObjList.Count - 1 To 0 Step -1
+                CoreMoveObjList(i).UpdatePos(ObeysGravity)
+                If CoreMoveObjList(i).Bounds.IntersectsWith(Form1.Bounds) = False Then
+                    Form1.Controls.Remove(CoreMoveObjList(i))
+                    CoreMoveObjList.Remove(CoreMoveObjList(i))
                 End If
             Next
 
@@ -68,13 +66,5 @@
         Pop.Location = New Point(ClickPos.X - 16, Form1.Height - Form1.Height / 5) 'test
         Return Pop
     End Function
-    Public Sub DisposeObj()
-        T.Stop()
-        Form1.Controls.Remove(Base.Popper)
-        For Each Obj In Base.CoreMoveObjList
-            Form1.Controls.Remove(Obj)
-        Next
-        Base.CoreMoveObjList.Clear()
-    End Sub
 
 End Class

@@ -1,36 +1,34 @@
 ﻿Public Class SpiralPopper
 
-    Public Base As New PopperFundamentals
-
-    Public WithEvents T As New Timer
+    Inherits PopperFundamentals
 
     Private P_YS, P_XS As Integer 'specific to spiral popper
 
     Public Sub New(ClickPos As Point)
-        Base.ObeysGravity = False
+        ObeysGravity = False
 
-        Base.Popper = GetPopper(ClickPos)
-        Form1.Controls.Add(Base.Popper)
-        Base.Popper.BringToFront()
+        Popper = GetPopper(ClickPos)
+        Form1.Controls.Add(Popper)
+        Popper.BringToFront()
         T.Interval = 60
         T.Start()
     End Sub
     Private Sub T_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles T.Tick
-        Base.CoreMoveObjList.Add(New Particle(Base.Popper, AssignParticleSpeedX, AssignParticleSpeedY))
+        CoreMoveObjList.Add(New Particle(Popper, AssignParticleSpeedX, AssignParticleSpeedY))
 
-        For i = Base.CoreMoveObjList.Count - 1 To 0 Step -1
-            Base.CoreMoveObjList(i).UpdatePos(Base.ObeysGravity)
+        For i = CoreMoveObjList.Count - 1 To 0 Step -1
+            CoreMoveObjList(i).UpdatePos(ObeysGravity)
             i = PreventLag(i)
-            If Base.CoreMoveObjList(i).Bounds.IntersectsWith(Form1.Bounds) = False Then
-                Form1.Controls.Remove(Base.CoreMoveObjList(i))
-                Base.CoreMoveObjList.Remove(Base.CoreMoveObjList(i))
+            If CoreMoveObjList(i).Bounds.IntersectsWith(Form1.Bounds) = False Then
+                Form1.Controls.Remove(CoreMoveObjList(i))
+                CoreMoveObjList.Remove(CoreMoveObjList(i))
             End If
         Next
     End Sub
     Private Function PreventLag(ByVal loopval As Integer) As Integer
-        If Base.CoreMoveObjList.Count > 30 Then 'prevent lag - not too many
-            Form1.Controls.Remove(Base.CoreMoveObjList(0))
-            Base.CoreMoveObjList.RemoveAt(0)
+        If CoreMoveObjList.Count > 30 Then 'prevent lag - not too many
+            Form1.Controls.Remove(CoreMoveObjList(0))
+            CoreMoveObjList.RemoveAt(0)
             Return loopval - 1
         End If
         Return loopval
@@ -60,14 +58,7 @@
         Return Pop
     End Function
 
-    Public Sub DisposeObj()
-        T.Stop()
-        Form1.Controls.Remove(Base.Popper)
-        For Each Obj In Base.CoreMoveObjList
-            Form1.Controls.Remove(Obj)
-        Next
-        Base.CoreMoveObjList.Clear()
-    End Sub
+
 
 End Class
 
