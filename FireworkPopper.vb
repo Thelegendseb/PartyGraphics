@@ -4,39 +4,40 @@
 
     Public WithEvents T As New Timer
 
-    Dim CentralGravObj As GravObj
+    Dim CentralParticle As Particle
 
-    Dim HasCentralPopped As Boolean
     Dim HasBurstOccured As Boolean
 
     Public Sub New(ClickPos As Point)
+        Base.ObeysGravity = True
+
         Base.Popper = GetPopper(ClickPos)
         Form1.Controls.Add(Base.Popper)
         Base.Popper.BringToFront()
         T.Interval = 60
         T.Start()
-        CentralGravObj = New GravObj(Base.Popper, AssignParticleSpeedX, AssignParticleSpeedY)
+        CentralParticle = New Particle(Base.Popper, AssignParticleSpeedX, AssignParticleSpeedY)
     End Sub
     Private Sub T_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles T.Tick
         '-----BASIC LOOP UNIVERSAL---------
 
-        If CentralGravObj.ys > 12 Then
-            Form1.Controls.Remove(CentralGravObj)
-            HasCentralPopped = True
+        If CentralParticle.ys > 12 Then
+            Form1.Controls.Remove(CentralParticle)
+            'asCentralPopped = True
             If HasBurstOccured = False Then
                 For i = 0 To 19
-                    Base.CoreMoveObjList.Add(New GravObj(CentralGravObj, AssignParticleSpeedX, AssignShowerSpeedY))
+                    Base.CoreMoveObjList.Add(New Particle(CentralParticle, AssignParticleSpeedX, AssignShowerSpeedY))
                 Next
                 HasBurstOccured = True
             End If
         Else
-            CentralGravObj.UpdatePos()
+            CentralParticle.UpdatePos(Base.ObeysGravity)
         End If
 
 
         If HasBurstOccured = True Then
             For i = Base.CoreMoveObjList.Count - 1 To 0 Step -1
-                Base.CoreMoveObjList(i).UpdatePos()
+                Base.CoreMoveObjList(i).UpdatePos(Base.ObeysGravity)
                 If Base.CoreMoveObjList(i).Bounds.IntersectsWith(Form1.Bounds) = False Then
                     Form1.Controls.Remove(Base.CoreMoveObjList(i))
                     Base.CoreMoveObjList.Remove(Base.CoreMoveObjList(i))
@@ -69,6 +70,10 @@
     End Function
     Public Sub DisposeObj()
         T.Stop()
+        Form1.Controls.Remove(Base.Popper)
+        For Each Obj In Base.CoreMoveObjList
+            Form1.Controls.Remove(Obj)
+        Next
         Base.CoreMoveObjList.Clear()
     End Sub
 
