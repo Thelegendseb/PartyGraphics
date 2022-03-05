@@ -101,7 +101,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="ConfettiPopper.vb" />
-    <Compile Include="PopperFundamenals.vb" />
+    <Compile Include="PartyObjBase.vb" />
     <Compile Include="SpiralPopper.vb" />
   </ItemGroup>
   <ItemGroup>

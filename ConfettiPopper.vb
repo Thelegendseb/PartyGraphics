@@ -1,15 +1,11 @@
 ﻿Public Class ConfettiPopper
 
-    Inherits PopperFundamentals
+    Inherits PartyObjBase
 
     Public Sub New(ClickPos As Point)
         ObeysGravity = True
-
         Popper = GetPopper(ClickPos)
-        Form1.Controls.Add(Popper)
-        Popper.BringToFront()
-        T.Interval = 60
-        T.Start()
+        InitiatePopper()
     End Sub
 
     Private Function AssignParticleSpeedX()
@@ -24,13 +20,13 @@
 
     Private Sub T_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles T.Tick
         '-----BASIC LOOP UNIVERSAL--------|
-
-        CoreMoveObjList.Add(New Particle(Popper, AssignParticleSpeedX, AssignParticleSpeedY))
+        TotalTimerTicks += 1
+        If TotalTimerTicks Mod 2 <> 0 Then 'half rate of generation
+            CoreMoveObjList.Add(New Particle(Popper, AssignParticleSpeedX, AssignParticleSpeedY))
+        End If
         For i = CoreMoveObjList.Count - 1 To 0 Step -1
             CoreMoveObjList(i).UpdatePos(ObeysGravity)
-
             i = PreventLag(i)
-
             If CoreMoveObjList(i).Bounds.IntersectsWith(Form1.Bounds) = False Then
                 Form1.Controls.Remove(CoreMoveObjList(i))
                 CoreMoveObjList.Remove(CoreMoveObjList(i))
@@ -39,18 +35,8 @@
         '---------------------------------|
     End Sub
 
-    Private Function PreventLag(ByVal loopval As Integer) As Integer
-        If CoreMoveObjList.Count > 30 Then 'prevent lag - not too many
-            Form1.Controls.Remove(CoreMoveObjList(0))
-            CoreMoveObjList.RemoveAt(0)
-            Return loopval - 1
-        End If
-        Return loopval
-    End Function
     Private Function GetPopper(ClickPos As Point) As PictureBox
-        Dim Pop As New PictureBox
-        Pop.BackColor = Color.White
-        Pop.Size = New Size(32, 32)
+        Dim Pop As PictureBox = PopperBase()
         Pop.Location = New Point(ClickPos.X - 16, ClickPos.Y - 16)
         Return Pop
     End Function

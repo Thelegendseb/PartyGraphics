@@ -1,6 +1,6 @@
 ﻿Public Class Form1
 
-    Dim PartyCollection As New List(Of PopperFundamentals)
+    Dim PartyCollection As New List(Of PartyObjBase)
 
     Dim PartyType As Integer = 0
 

@@ -1,6 +1,6 @@
 ﻿Public Class FireworkPopper
 
-    Inherits PopperFundamentals
+    Inherits PartyObjBase
 
     Dim CentralParticle As Particle
 
@@ -8,17 +8,13 @@
 
     Public Sub New(ClickPos As Point)
         ObeysGravity = True
-
         Popper = GetPopper(ClickPos)
-        Form1.Controls.Add(Popper)
-        Popper.BringToFront()
-        T.Interval = 60
-        T.Start()
+        InitiatePopper()
         CentralParticle = New Particle(Popper, AssignParticleSpeedX, AssignParticleSpeedY)
     End Sub
     Private Sub T_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles T.Tick
         '-----BASIC LOOP UNIVERSAL---------
-
+        TotalTimerTicks += 1
         If CentralParticle.ys > 12 Then
             Form1.Controls.Remove(CentralParticle)
             'asCentralPopped = True
@@ -60,9 +56,7 @@
     End Function
 
     Private Function GetPopper(ClickPos As Point) As PictureBox
-        Dim Pop As New PictureBox
-        Pop.BackColor = Color.White
-        Pop.Size = New Size(32, 32)
+        Dim Pop As PictureBox = PopperBase()
         Pop.Location = New Point(ClickPos.X - 16, Form1.Height - Form1.Height / 5) 'test
         Return Pop
     End Function
