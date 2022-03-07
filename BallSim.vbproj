@@ -102,6 +102,8 @@
     </Compile>
     <Compile Include="ConfettiPopper.vb" />
     <Compile Include="PartyObjBase.vb" />
+    <Compile Include="RipplePopper.vb" />
+    <Compile Include="SnakePopper.vb" />
     <Compile Include="SpiralPopper.vb" />
   </ItemGroup>
   <ItemGroup>

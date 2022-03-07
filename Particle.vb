@@ -30,4 +30,5 @@
         'later on - color presets?!
         Me.BackColor = PartyCols(Int(Rnd() * (PartyCols.Length)))
     End Sub
+
 End Class

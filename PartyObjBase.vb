@@ -38,4 +38,11 @@
         Return New PictureBox With {.BackColor = Color.White, .Size = New Size(32, 32)}
     End Function
 
+    Sub RemoveOutOfBoundsParticles(ParticleCheck As Particle)
+        If ParticleCheck.Bounds.IntersectsWith(Form1.Bounds) = False Then
+            Form1.Controls.Remove(ParticleCheck)
+            CoreMoveObjList.Remove(ParticleCheck)
+        End If
+    End Sub
+
 End Class

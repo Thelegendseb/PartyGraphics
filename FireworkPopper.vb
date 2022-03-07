@@ -2,9 +2,10 @@
 
     Inherits PartyObjBase
 
-    Dim CentralParticle As Particle
+    Private ReadOnly CentralParticle As Particle
+    'movement of particle is only defined by particles methods
 
-    Dim HasBurstOccured As Boolean
+    Private HasBurstOccured As Boolean
 
     Public Sub New(ClickPos As Point)
         ObeysGravity = True
@@ -32,10 +33,7 @@
         If HasBurstOccured = True Then
             For i = CoreMoveObjList.Count - 1 To 0 Step -1
                 CoreMoveObjList(i).UpdatePos(ObeysGravity)
-                If CoreMoveObjList(i).Bounds.IntersectsWith(Form1.Bounds) = False Then
-                    Form1.Controls.Remove(CoreMoveObjList(i))
-                    CoreMoveObjList.Remove(CoreMoveObjList(i))
-                End If
+                RemoveOutOfBoundsParticles(CoreMoveObjList(i))
             Next
 
         End If

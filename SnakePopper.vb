@@ -1,35 +1,38 @@
-﻿Public Class ConfettiPopper
+﻿Public Class SnakePopper
 
     Inherits PartyObjBase
 
+    Private MouseTracks As New List(Of Point)
+
     Public Sub New(ClickPos As Point)
-        ObeysGravity = True
+        ObeysGravity = False
         Popper = GetPopper(ClickPos)
         InitiatePopper()
     End Sub
 
     Private Function AssignParticleSpeedX()
-        Randomize()
-        Return (Int(Rnd() * 30)) - 15
+        Return 0
     End Function
 
     Private Function AssignParticleSpeedY()
-        Randomize()
-        Return -40 + (Int(Rnd() * 10) + 1)
+        Return 0
     End Function
 
     Private Sub T_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles T.Tick
-        '-----BASIC LOOP UNIVERSAL--------|
+
         TotalTimerTicks += 1
-        If TotalTimerTicks Mod 2 <> 0 Then 'half rate of generation
-            CoreMoveObjList.Add(New Particle(Popper, AssignParticleSpeedX, AssignParticleSpeedY))
-        End If
+
+
+        CoreMoveObjList.Add(New Particle(Popper, AssignParticleSpeedX, AssignParticleSpeedY))
+
+
+
         For i = CoreMoveObjList.Count - 1 To 0 Step -1
             CoreMoveObjList(i).UpdatePos(ObeysGravity)
             i = PreventLag(i)
             RemoveOutOfBoundsParticles(CoreMoveObjList(i))
         Next
-        '---------------------------------|
+
     End Sub
 
     Private Function GetPopper(ClickPos As Point) As PictureBox
