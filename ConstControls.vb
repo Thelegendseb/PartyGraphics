@@ -11,7 +11,7 @@
         Return New Button With {.Location = New Point(Form1.ClientSize.Width - 20 - 60, 20),
                                 .Size = New Size(60, 40),
                                 .BackColor = Color.LightGray,
-                                .Text = "Pause"}
+                                .Text = "(P)ause"}
     End Function
 
 End Class

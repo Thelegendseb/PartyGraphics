@@ -25,6 +25,16 @@
         Me.Top += ys
     End Sub
 
+    Public Sub UpdatePos_Custom(ObeysGrav As Boolean, x As Integer, y As Integer)
+        If ObeysGrav = True Then
+            ys += 3
+        End If
+        Me.Left += x
+        Me.Top += y
+    End Sub
+
+
+
     Private Sub Assign()
         Dim PartyCols() As Color = {Color.Red, Color.Yellow, Color.Green, Color.Pink, Color.LightBlue}
         'later on - color presets?!

@@ -23,6 +23,8 @@
                             PartyCollection.Add(New SpiralPopper(New Point(e.X, e.Y)))
                         Case 4
                             PartyCollection.Add(New RipplePopper(New Point(e.X, e.Y)))
+                        Case 5
+                            PartyCollection.Add(New SnakePopper(New Point(e.X, e.Y)))
                     End Select
 
 
@@ -35,9 +37,9 @@
         End If
     End Sub
 
-    '========BUTTON/S=========
+    '========BUTTON/S & KEYS=========
     Private Sub ChangePartyType(ByVal sender As Object, ByVal e As EventArgs)
-        Dim Reaction As Object = InputBox("Enter the type of party you want to have! 1,2,3,4")
+        Dim Reaction As Object = InputBox("Enter the type of party you want to have! 1,2,3,4,5")
         If Reaction = "" Then
             MsgBox("You must enter a party number in order to begin. please do so!")
         Else
@@ -45,8 +47,28 @@
             PartyReset()
         End If
     End Sub
-
     Private Sub PauseClicked(ByVal sender As Object, ByVal e As EventArgs)
+        Pause()
+    End Sub
+    Private Sub KeyPressed(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+        If e.KeyCode = Keys.P Then
+            Pause()
+        End If
+    End Sub
+    '- - - - - - - - - - - - -
+    Private Sub AddControlsToForm()
+        Dim SwitchPartyType As Button = ConstControls.GetButton_ChangeType()
+        AddHandler SwitchPartyType.Click, AddressOf ChangePartyType
+        Me.Controls.Add(SwitchPartyType)
+
+        Dim Pause As Button = ConstControls.GetButton_Pause()
+        AddHandler Pause.Click, AddressOf PauseClicked
+        Me.Controls.Add(Pause)
+    End Sub
+    '=========================
+
+    '========XTRAS=========
+    Private Sub Pause()
         If PartyCollection.Count > 0 Then
             If Paused = False Then
                 For Each PartyObj In PartyCollection
@@ -62,18 +84,7 @@
             End If
         End If
     End Sub
-    '- - - - - - - - - - - - -
-    Sub AddControlsToForm()
-        Dim SwitchPartyType As Button = ConstControls.GetButton_ChangeType()
-        AddHandler SwitchPartyType.Click, AddressOf ChangePartyType
-        Me.Controls.Add(SwitchPartyType)
-
-        Dim Pause As Button = ConstControls.GetButton_Pause()
-        AddHandler Pause.Click, AddressOf PauseClicked
-        Me.Controls.Add(Pause)
-    End Sub
-    '=========================
-    Sub Init()
+    Private Sub Init()
         Me.BackgroundImageLayout = ImageLayout.Stretch
         Me.BackColor = Color.Black
         Me.Size = MaximumSize
@@ -82,12 +93,11 @@
 
         AddControlsToForm()
     End Sub
-
-    Sub PartyReset()
+    Private Sub PartyReset()
         For Each PartyObj In PartyCollection
             PartyObj.DisposeObj()
         Next
         PartyCollection.Clear()
     End Sub
-
+    '=========================
 End Class

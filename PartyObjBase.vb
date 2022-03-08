@@ -45,4 +45,11 @@
         End If
     End Sub
 
+    Public Function GetMousePos() As Point
+        Dim p As Point = Form1.PointToClient(Cursor.Position)
+        p.Y -= 10  'sits ontop of cursor
+        p.X -= 5
+        Return p
+    End Function
+
 End Class
